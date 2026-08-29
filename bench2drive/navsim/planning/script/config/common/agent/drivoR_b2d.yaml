@@ -1,0 +1,118 @@
+# Copyright (c) 2026 Robert Bosch GmbH
+# SPDX-License-Identifier: AGPL-3.0
+
+_target_: navsim.agents.drivoR.drivor_agent.DrivoRAgent
+
+config:
+  b2d: true
+  use_acceleration: false
+  use_local_command_xy: false
+
+  shared_refiner: false
+  ref_num: 4
+  scorer_ref_num: 4
+
+  proposal_num: 64
+  num_poses: 6
+
+  num_scene_tokens: 16
+  one_token_per_traj: true
+  full_history_status: false
+
+  long_trajectory_additional_poses: -1
+
+  noc: 1.0
+  dac: 1.0
+  enable_collision_gate_for_ep: true
+  enable_drivable_gate_for_ep: true
+  ddc: 0.0
+  ttc: 5.0
+  ep: 5.0
+  comfort: 2.0
+
+  tf_d_model: 256
+  tf_d_ffn: 1024
+  freeze_backbone: false
+  skip_perception_backbone: false
+
+  epi_memory:
+    enabled: false
+
+  cam_f0: [3]
+  cam_l0: [3]
+  cam_l1: []
+  cam_l2: []
+  cam_r0: [3]
+  cam_r1: []
+  cam_r2: []
+  cam_b0: [3]
+  lidar_pc: []
+
+  image_size: [1120, 630]
+  image_backbone:
+    model_name: timm/vit_small_patch14_reg4_dinov2.lvd142m
+    model_weights: weights/vit_small_patch14_reg4_dinov2.lvd142m/model.safetensors
+    use_lora: true
+    finetune: false
+    lora_rank: 32
+    focus_front_cam: false
+    use_feature_pooling: false
+    compress_fc: false
+
+  lidar_min_x: -35
+  lidar_max_x: 35
+  lidar_min_y: -35
+  lidar_max_y: 35
+  lidar_image_size: [518, 518]
+  lidar_hist_max_per_pixel: 5
+  lidar_max_height: 100.0
+  lidar_split_height: 0.2
+  lidar_use_ground_plane: true
+  lidar_backbone:
+    model_name: timm/vit_small_patch14_reg4_dinov2.lvd142m
+    model_weights: weights/vit_small_patch14_reg4_dinov2.lvd142m/model.safetensors
+    use_lora: true
+    finetune: false
+    lora_rank: 32
+    in_chans: 2
+
+  double_score: false
+  agent_pred: false
+  area_pred: false
+  bev_map: false
+  bev_agent: false
+  refiner_num_heads: 1
+  refiner_ls_values: 0.0
+
+  trajectory_sampling:
+    _target_: nuplan.planning.simulation.trajectory.trajectory_sampling.TrajectorySampling
+    time_horizon: 3
+    interval_length: 0.5
+
+loss:
+  _target_: navsim.agents.drivoR.layers.losses.drivor_loss.DrivoRLoss
+  trajectory_weight: 1.0
+  inter_weight: 0.0
+  sub_score_weight: 0.0
+  final_score_weight: 1.0
+  pred_ce_weight: 1.0
+  pred_l1_weight: 0.1
+  pred_area_weight: 2.0
+  prev_weight: 0.0
+  agent_class_weight: 1.0
+  agent_box_weight: 0.1
+  bev_semantic_weight: 1.0
+
+checkpoint_path: ''
+b2d_cache_path: ${oc.select:cache_path,null}
+lr_args:
+  name: AdamW
+  base_lr: 1e-4
+  base_batch_size: 64
+scheduler_args:
+  num_epochs: ${trainer.params.max_epochs}
+  dataset_size: 196761 # for b2d
+
+batch_size: ${dataloader.params.batch_size}
+num_gpus: 1
+progress_bar: true

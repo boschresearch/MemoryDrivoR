@@ -1,0 +1,202 @@
+# Copyright (c) 2026 Robert Bosch GmbH
+# SPDX-License-Identifier: AGPL-3.0
+
+_target_: navsim.agents.drivoR.drivor_agent.DrivoRAgent
+
+config:
+
+  shared_refiner: false
+  ref_num: 4 # number of refining steps
+  scorer_ref_num: 4
+
+  proposal_num: 64 # number of proposals (trajectories)
+  num_poses: 8 # size if the trajectories
+
+  num_scene_tokens: 16 
+  one_token_per_traj: true
+  full_history_status: false
+
+  long_trajectory_additional_poses: -1 # to load additional poses (not use currently in this version)
+
+  noc: 1.0 
+  dac: 1.0
+  ddc: 0.0
+  ttc: 5.0
+  ep: 5.0
+  comfort: 2.0
+
+  tf_d_model: 256 # general feature size of the model
+  tf_d_ffn: 1024 # hidden size of the heads
+  freeze_backbone: true
+  skip_perception_backbone: false  # if true, training and inference use memory without perception-backbone tokens.
+
+  ####################
+  # episodic memory params
+  epi_memory:
+    enabled: true
+    bank:
+      path: null
+      top_k: 10
+      use_precomputed_train_neighbors: true
+      rerank_precomputed_candidates: false  # if true: rerank the stored precomputed candidate subset online using the current query pose before truncating to top_k.
+      query_pose_noise_longitudinal_std_m: 0.0  # deterministic per-scenario Gaussian longitudinal noise in the pose frame.
+      query_pose_noise_lateral_std_m: 0.0  # deterministic per-scenario Gaussian lateral noise in the pose frame.
+      query_pose_noise_yaw_std_deg: 0.0  # deterministic per-scenario Gaussian yaw noise in degrees.
+      query_pose_noise_seed: 0
+      memory_pose_noise_longitudinal_std_m: 0.0  # deterministic per-memory Gaussian longitudinal noise in the pose frame.
+      memory_pose_noise_lateral_std_m: 0.0  # deterministic per-memory Gaussian lateral noise in the pose frame.
+      memory_pose_noise_yaw_std_deg: 0.0  # deterministic per-memory Gaussian yaw noise in degrees.
+      memory_pose_noise_seed: 0
+      yaw_distance_weight: 0.0
+      exclude_self: true
+      max_distance_m: 20
+      min_yaw: null
+      max_yaw: null
+    injector:
+      use_epi_flag: true
+      use_output_proj: true
+      add_pose_before_resamp: true
+      mask_current_tokens_prob: 0.2
+      resampler:
+        version: original
+        num_latents: 8
+        num_heads: 8
+        num_layers: 2
+        ff_mult: 4
+      pose_embedder:
+        pose_dim: 2
+        norm_range: [35.0, 35.0, 10.0] # based on Lidar range
+        num_freqs: 6
+
+  ####################
+  # hd map params
+  hd_map:
+    enabled: false
+    mode: replace  # Used only when HD map is the sole added context; when epi_memory.enabled=true as well, map tokens use a dedicated cross-attention branch.
+    feature_builder:
+      query_radius_m: 35.0
+      points_per_polyline: 20
+      max_polylines: 96
+      include_baseline: true
+      include_left_boundary: true
+      include_right_boundary: true
+      polygon_layers:
+        - STOP_LINE
+        - CROSSWALK
+        - INTERSECTION
+        - ROADBLOCK
+        - ROADBLOCK_CONNECTOR
+        - WALKWAYS
+        - CARPARK_AREA
+    encoder:
+      embed_dim: 64
+      num_heads: 4
+      num_local_layers: 2
+      num_global_layers: 2
+      ff_mult: 4
+      dropout: 0.1
+      include_direction: true
+      include_on_route: true
+      include_has_traffic_lights: true
+      include_stop_line_subtype: true
+      include_speed_limit: true
+
+  ####################
+  # sensor config
+  cam_f0: [3]
+  cam_l0: [3]
+  cam_l1: []
+  cam_l2: []
+  cam_r0: [3]
+  cam_r1: []
+  cam_r2: []
+  cam_b0: [3]
+  lidar_pc: []
+
+
+  ####################
+  # image branch params
+  image_size: [1148, 672] # input image size
+  
+  image_backbone:
+    model_name: timm/vit_small_patch14_reg4_dinov2.lvd142m
+    model_weights: weights/vit_small_patch14_reg4_dinov2.lvd142m/model.safetensors
+    use_lora: true
+    finetune: false
+    lora_rank: 32
+    focus_front_cam: false
+    use_feature_pooling: false
+    compress_fc: false
+
+
+  # fov: [[-50., -50., -5.], [50., 50., 5.]] # simplebev field of view
+  # voxel_grid: [100, 100, 8] # simple voxel grid size 
+  # bev_encoder_conv_only: true # true, drop the classifier | false, classifier thus one scene vector
+
+  #####################
+  # Lidar branch params
+  lidar_min_x: -35
+  lidar_max_x: 35
+  lidar_min_y: -35
+  lidar_max_y: 35
+  lidar_image_size: [518, 518] # input image size
+  lidar_hist_max_per_pixel: 5
+  lidar_max_height: 100.0
+  lidar_split_height: 0.2
+  lidar_use_ground_plane: true
+  lidar_backbone:
+    model_name: timm/vit_small_patch14_reg4_dinov2.lvd142m
+    model_weights: weights/vit_small_patch14_reg4_dinov2.lvd142m/model.safetensors
+    use_lora: true
+    finetune: false
+    lora_rank: 32
+    in_chans: 2 # 2 if use ground plane, 1 otherwise
+
+
+  ####################
+  # scorer params
+  double_score: false
+  agent_pred: false
+  area_pred: false
+  bev_map: false
+  bev_agent: false
+  refiner_num_heads: 1
+  refiner_ls_values: 0.0
+  
+  trajectory_sampling:
+    _target_: nuplan.planning.simulation.trajectory.trajectory_sampling.TrajectorySampling
+    time_horizon: 4
+    interval_length: 0.5
+
+
+
+loss:
+  _target_: navsim.agents.drivoR.layers.losses.drivor_loss.DrivoRLoss
+  trajectory_weight: 1.0
+  inter_weight: 0.0
+  sub_score_weight: 0.0
+  final_score_weight: 1.0
+  pred_ce_weight: 1.0
+  pred_l1_weight: 0.1
+  pred_area_weight: 2.0
+  prev_weight: 0.0
+  agent_class_weight: 1.0
+  agent_box_weight: 0.1
+  bev_semantic_weight: 1.0
+  div_weight: 0.0
+
+
+checkpoint_path: ''
+lr_args: 
+  name: AdamW
+  base_lr: 5e-4
+  base_batch_size: 64
+  epi_memory_base_lr: null  # Optional: overrides LR for epi_memory_injector param group.
+scheduler_args: 
+  num_epochs: ${trainer.params.max_epochs}
+  dataset_size: 85000 # for navsim
+
+batch_size: ${dataloader.params.batch_size}
+num_gpus: 1 # the batchsize is per gpu --> need to update for steps
+
+progress_bar: true # default progress bar. if false replace by a console print every 100 iterations (better for JZ)
