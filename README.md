@@ -11,7 +11,7 @@
 
 <p align="center">
     <!-- doc badges -->
-    <a href="http://arxiv.org/abs/xxxx.xxxx">
+    <a href="http://arxiv.org/abs/2608.31029">
         <img src='https://img.shields.io/badge/arXiv-Paper-aff'>
     </a>
 </p>
@@ -29,7 +29,7 @@
 ## Purpose of the project
 We introduce **MemoryDrivoR**, an analytical baseline for assessing whether current autonomous-driving benchmarks genuinely require models to interact with dynamic objects. Using MemoryDrivoR, we critically examine the NAVSIM benchmark and demonstrate that strong performance can be achieved using only static scene information. Although such information is necessary for autonomous driving, it should not be sufficient on its own. Therefore, MemoryDrivoR is intended solely as an auditing and research tool and is not designed for production use.
 
-Here, we present the companion code for our paper "[Driving on Memory](http://arxiv.org/abs/xxxx.xxxx)" by Christian Löwens et al. The code allows the users to reproduce and extend the NAVSIM and Bench2Drive results reported in the study. Please cite this work when reporting, reproducing or extending our results. This software is a research prototype, solely developed for and published as part of the paper. It will neither be maintained nor monitored in any way.
+Here, we present the companion code for our paper "[Driving on Memory](http://arxiv.org/abs/2608.31029)" by Christian Löwens et al. The code allows the users to reproduce and extend the NAVSIM and Bench2Drive results reported in the study. Please cite this work when reporting, reproducing or extending our results. This software is a research prototype, solely developed for and published as part of the paper. It will neither be maintained nor monitored in any way.
 
 ## Codebase Usage
 
