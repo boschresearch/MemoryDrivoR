@@ -5,9 +5,6 @@ construction, MemoryDrivoR fine-tuning, ego-only fine-tuning, and NAVSIMv1
 evaluation.
 Complete the NAVSIM setup in [setup.md](setup.md) first.
 
-Prebuilt MemoryDrivoR checkpoints and memory banks will be released soon. Until
-then, the commands below create the files needed for evaluation.
-
 The `navsim1/` codebase is used for all NAVSIM training and fine-tuning,
 including NAVSIMv2 models, and for NAVSIMv1 evaluation. The `navsim2/` codebase
 is used only for NAVSIMv2 evaluation.
@@ -22,8 +19,8 @@ weights/original_ckpts/base_drivor_navsim1.pth
 weights/original_ckpts/base_drivor_navsim2.pth
 ```
 
-The original DrivoR download commands in the setup guide place these files at
-the same paths.
+If the artifact download commands from the setup guide were run, these files are
+already in place.
 
 ## Construct NAVSIM Memory Banks
 
@@ -68,8 +65,11 @@ python -m navsim.planning.script.run_build_episodic_memory_bank \
   agent.config.epi_memory.bank.top_k=50
 ```
 
-The builders write:
+Checkpoint files:
 `memory_banks/memory_bank_navsim1.pt` and `memory_banks/memory_bank_navsim2.pt`.
+
+If the artifact download commands from the setup guide were run, these files are
+already in place.
 
 ## Fine-Tune MemoryDrivoR On The Memory Bank
 
@@ -130,8 +130,11 @@ python -m navsim.planning.script.run_training_full \
   seed=2
 ```
 
-Use the trained checkpoints at:
+Checkpoint files:
 `weights/memorydrivor_navsim1.ckpt` and `weights/memorydrivor_navsim2.ckpt`.
+
+If the artifact download commands from the setup guide were run, these files are
+already in place.
 
 ## Fine-Tune DrivoR Only On Ego Status
 
@@ -178,8 +181,11 @@ python -m navsim.planning.script.run_training_full \
 For the NAVSIMv2 ego-only control, switch `BASE_CKPT`,
 `LONG_TRAJ_ADD_POSES=-1`, and `EXPERIMENT=finetuning_ego_only/navtrain/navsim2`.
 
-Use the trained checkpoints at:
+Checkpoint files:
 `weights/ego_only_navsim1.ckpt` and `weights/ego_only_navsim2.ckpt`.
+
+If the artifact download commands from the setup guide were run, these files are
+already in place.
 
 ## NAVSIMv1 Evaluation
 

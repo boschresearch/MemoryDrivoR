@@ -1,20 +1,24 @@
 <div align="center">
 <h1>Driving on Memory</h1>
-</div>
-<p align="center">
+<p>
     <a href="https://scholar.google.com/citations?user=9m868l8AAAAJ"><strong>Christian Löwens</strong></a>
     ·
     <a href="https://scholar.google.com/citations?user=VbjQxioAAAAJ"><strong>Thorben Funke</strong></a>
     ·
     <a href="https://www.inb.uni-luebeck.de/mitarbeiter/mitarbeiter/professoren/alexandru-condurache"><strong>Alexandru Paul Condurache</strong></a>
 </p>
-
-<p align="center">
+<h3>NeurIPS 2026</h3>
+<p>
     <!-- doc badges -->
     <a href="http://arxiv.org/abs/2608.31029">
-        <img src='https://img.shields.io/badge/arXiv-Paper-aff'>
+        <img src='https://img.shields.io/badge/arXiv-Paper-aff?style=flat-square'>
+    </a>
+    &nbsp;&nbsp;
+    <a href="#artifacts">
+        <img src='https://img.shields.io/badge/checkpoints-available-aff?style=flat-square'>
     </a>
 </p>
+</div>
 
 # 
 **TL;DR:** We show that high benchmark scores in end-to-end driving can be achieved without observing the current traffic scene, using solely memory from previous drives.
@@ -33,7 +37,9 @@ Here, we present the companion code for our paper "[Driving on Memory](http://ar
 
 ## Codebase Usage
 
-This release contains the code. Project-produced **checkpoints and memory banks will be released soon. Until then, the guides explain how to regenerate them from scratch.** Third-party checkpoints that are already public remain linked below.
+Released checkpoints and memory banks can be used directly for evaluation, while
+the training and memory-bank construction docs explain how to regenerate the
+corresponding artifacts from scratch.
 
 - `navsim1/` is used for all NAVSIM training and fine-tuning, including the
   NAVSIMv2 models, and for NAVSIMv1 evaluation.
@@ -45,9 +51,9 @@ This release contains the code. Project-produced **checkpoints and memory banks 
 
 **NAVSIM:**
 
-1. Create local folders, install environments, and download NAVSIM data and
-   external checkpoints with [docs/navsim/setup.md](docs/navsim/setup.md).
-2. Regenerate and evaluate NAVSIM artifacts with
+1. Create local folders, install environments, and download NAVSIM artifacts or
+   data with [docs/navsim/setup.md](docs/navsim/setup.md).
+2. Evaluate released NAVSIM artifacts or regenerate them with
    [docs/navsim/reproduction.md](docs/navsim/reproduction.md).
 3. Reproduce NAVSIM paper ablations with
    [docs/navsim/ablations.md](docs/navsim/ablations.md).
@@ -55,9 +61,9 @@ This release contains the code. Project-produced **checkpoints and memory banks 
 **Bench2Drive:**
 
 1. Create local folders, install the environment and CARLA, and download
-   Bench2Drive data and external checkpoints with
+   Bench2Drive artifacts or data with
    [docs/bench2drive/setup.md](docs/bench2drive/setup.md).
-2. Regenerate and evaluate Bench2Drive artifacts with
+2. Evaluate released Bench2Drive artifacts or regenerate them with
    [docs/bench2drive/reproduction.md](docs/bench2drive/reproduction.md).
 3. Reproduce Bench2Drive geographic split ablations with
    [docs/bench2drive/ablations.md](docs/bench2drive/ablations.md).
@@ -65,40 +71,40 @@ This release contains the code. Project-produced **checkpoints and memory banks 
 
 ## Artifacts
 
-Large artifacts are not committed to this repository. The local paths below are
-the paths expected by the reproduction commands.
+Large artifacts are not committed to this repository. Download them into the
+local paths shown below. The setup guides contain copy-paste download commands.
 
 ### Base DrivoR Checkpoints
 
-| Version | Artifact | Availability | Local path | Size |
-| --- | --- | --- | --- | --- |
-| NAVSIMv1 | Original DrivoR checkpoint | [Available from DrivoR](https://github.com/valeoai/DrivoR/releases/download/model_weights/drivor_Nav1_25epochs.pth) | `weights/original_ckpts/base_drivor_navsim1.pth` | 291 MB |
-| NAVSIMv2 | Original* DrivoR checkpoint | [Available from DrivoR](https://github.com/valeoai/DrivoR/releases/download/model_weights/drivor_Nav2_10epochs.pth) | `weights/original_ckpts/base_drivor_navsim2.pth` | 291 MB |
-| NAVSIMv2 | Reproduced* DrivoR checkpoint | Coming soon | `weights/original_ckpts/base_drivor_navsim2.pth` | 291 MB |
-| Bench2Drive | Reproduced DrivoR checkpoint | Coming soon | `weights/original_ckpts/base_drivor_b2d.ckpt` | 295.4 MB |
+| Version | Artifact | Local path | Size |
+| --- | --- | --- | --- |
+| NAVSIMv1 | [Original DrivoR checkpoint](https://github.com/valeoai/DrivoR/releases/download/model_weights/drivor_Nav1_25epochs.pth) | `weights/original_ckpts/base_drivor_navsim1.pth` | 291 MB |
+| NAVSIMv2 | [Original* DrivoR checkpoint](https://github.com/valeoai/DrivoR/releases/download/model_weights/drivor_Nav2_10epochs.pth) | `weights/original_ckpts/base_drivor_navsim2.pth` | 291 MB |
+| NAVSIMv2 | [Reproduced* DrivoR checkpoint](https://zenodo.org/records/22959058/files/base_drivor_navsim2.ckpt) | `weights/original_ckpts/base_drivor_navsim2.pth` | 291 MB |
+| Bench2Drive | [Reproduced DrivoR checkpoint](https://zenodo.org/records/22959058/files/base_drivor_b2d.ckpt) | `weights/original_ckpts/base_drivor_b2d.ckpt` | 295.4 MB |
 
 \**Consistent with [reports from others](https://github.com/valeoai/DrivoR/issues/31), we were unable to reproduce the NAVSIMv2 performance reported for DrivoR. To ensure a consistent and fair evaluation, we therefore used our independently reproduced checkpoint in all experiments (incl. memory building and fine-tuning for the models below).*
 
 ### MemoryDrivoR And Controls
 
-| Version | Artifact | Availability | Local path | Size |
-| --- | --- | --- | --- | --- |
-| **NAVSIMv1** | **MemoryDrivoR checkpoint** | Coming soon | `weights/memorydrivor_navsim1.ckpt` | 305.8 MB |
-| NAVSIMv1 | Ego-only checkpoint | Coming soon | `weights/ego_only_navsim1.ckpt` | 269.8 MB |
-| NAVSIMv1 | HD-map-only checkpoint | Coming soon | `weights/hdmap_only_navsim1.ckpt` | 197.9 MB |
-| **NAVSIMv2** | **MemoryDrivoR checkpoint** | Coming soon | `weights/memorydrivor_navsim2.ckpt` | 305.8 MB |
-| NAVSIMv2 | Ego-only checkpoint | Coming soon | `weights/ego_only_navsim2.ckpt` | 269.8 MB |
-| NAVSIMv2 | HD-map-only checkpoint | Coming soon | `weights/hdmap_only_navsim2.ckpt` | 197.9 MB |
-| **Bench2Drive** | **MemoryDrivoR checkpoint** | Coming soon | `weights/memorydrivor_b2d.ckpt` | 310.1 MB |
-| Bench2Drive | Ego-only checkpoint | Coming soon | `weights/ego_only_b2d.ckpt` | 273.2 MB |
+| Version | Artifact | Local path | Size |
+| --- | --- | --- | --- |
+| **NAVSIMv1** | [**MemoryDrivoR checkpoint**](https://zenodo.org/records/22959058/files/memorydrivor_navsim1.ckpt) | `weights/memorydrivor_navsim1.ckpt` | 305.8 MB |
+| NAVSIMv1 | [Ego-only checkpoint](https://zenodo.org/records/22959058/files/ego_only_navsim1.ckpt) | `weights/ego_only_navsim1.ckpt` | 269.8 MB |
+| NAVSIMv1 | [HD-map-only checkpoint](https://zenodo.org/records/22959058/files/hdmap_only_navsim1.ckpt) | `weights/hdmap_only_navsim1.ckpt` | 197.9 MB |
+| **NAVSIMv2** | [**MemoryDrivoR checkpoint**](https://zenodo.org/records/22959058/files/memorydrivor_navsim2.ckpt) | `weights/memorydrivor_navsim2.ckpt` | 305.8 MB |
+| NAVSIMv2 | [Ego-only checkpoint](https://zenodo.org/records/22959058/files/ego_only_navsim2.ckpt) | `weights/ego_only_navsim2.ckpt` | 269.8 MB |
+| NAVSIMv2 | [HD-map-only checkpoint](https://zenodo.org/records/22959058/files/hdmap_only_navsim2.ckpt) | `weights/hdmap_only_navsim2.ckpt` | 197.9 MB |
+| **Bench2Drive** | [**MemoryDrivoR checkpoint**](https://zenodo.org/records/22959058/files/memorydrivor_b2d.ckpt) | `weights/memorydrivor_b2d.ckpt` | 310.1 MB |
+| Bench2Drive | [Ego-only checkpoint](https://zenodo.org/records/22959058/files/ego_only_b2d.ckpt) | `weights/ego_only_b2d.ckpt` | 273.2 MB |
 
 ### Memory Banks
 
-| Version | Artifact | Availability | Local path | Size |
-| --- | --- | --- | --- | --- |
-| NAVSIMv1 | Memory bank | Coming soon | `memory_banks/memory_bank_navsim1.pt` | 6.3 GB |
-| NAVSIMv2 | Memory bank | Coming soon | `memory_banks/memory_bank_navsim2.pt` | 6.3 GB |
-| Bench2Drive | Memory bank | Coming soon | `memory_banks/memory_bank_b2d.pt` | 22.2 GB |
+| Version | Artifact | Local path | Size |
+| --- | --- | --- | --- |
+| NAVSIMv1 | [Memory bank](https://zenodo.org/records/22959058/files/memory_bank_navsim1.pt) | `memory_banks/memory_bank_navsim1.pt` | 6.3 GB |
+| NAVSIMv2 | [Memory bank](https://zenodo.org/records/22959058/files/memory_bank_navsim2.pt) | `memory_banks/memory_bank_navsim2.pt` | 6.3 GB |
+| Bench2Drive | [Memory bank](https://zenodo.org/records/22959058/files/memory_bank_b2d.pt) | `memory_banks/memory_bank_b2d.pt` | 22.2 GB |
 
 The external DINOv2 backbone is downloaded from Hugging Face during setup.
 

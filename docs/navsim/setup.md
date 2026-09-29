@@ -149,7 +149,29 @@ curl -L https://github.com/valeoai/DrivoR/releases/download/model_weights/drivor
 curl -L https://github.com/valeoai/DrivoR/releases/download/model_weights/drivor_Nav2_10epochs.pth -o "$MEMORYDRIVOR_ROOT/weights/original_ckpts/base_drivor_navsim2.pth"
 ```
 
-## Project Artifacts
+MemoryDrivoR NAVSIM checkpoints and memory banks use the Zenodo record listed in
+the [root README artifact table](../../README.md#artifacts):
 
-MemoryDrivoR-produced checkpoints and memory banks will be released soon. Until then, follow [reproduction.md](reproduction.md) to construct the memory
-banks and train the checkpoints locally.
+```bash
+export MEMORYDRIVOR_CLOUD="https://zenodo.org/records/22959058/files"
+
+# Use our reproduced NAVSIMv2 base checkpoint for the paper results.
+curl -L "$MEMORYDRIVOR_CLOUD/base_drivor_navsim2.ckpt" \
+  -o "$MEMORYDRIVOR_ROOT/weights/original_ckpts/base_drivor_navsim2.pth"
+
+for file in \
+  memorydrivor_navsim1.ckpt \
+  memorydrivor_navsim2.ckpt \
+  ego_only_navsim1.ckpt \
+  ego_only_navsim2.ckpt \
+  hdmap_only_navsim1.ckpt \
+  hdmap_only_navsim2.ckpt
+do
+  curl -L "$MEMORYDRIVOR_CLOUD/$file" -o "$MEMORYDRIVOR_ROOT/weights/$file"
+done
+
+for file in memory_bank_navsim1.pt memory_bank_navsim2.pt
+do
+  curl -L "$MEMORYDRIVOR_CLOUD/$file" -o "$MEMORYDRIVOR_ROOT/memory_banks/$file"
+done
+```

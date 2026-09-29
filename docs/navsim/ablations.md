@@ -124,5 +124,5 @@ agent.config.hd_map.enabled=true
 agent.config.skip_perception_backbone=true
 ```
 
-Prebuilt HD-map-only checkpoints will be released soon. Until then, use the
-checkpoint produced by the fine-tuning command above.
+If the artifact download commands from [setup.md](setup.md) were run, these
+files are already in place.

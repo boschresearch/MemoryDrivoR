@@ -12,7 +12,14 @@ reuses the DrivoR package layout.
 
 ## Train Base DrivoR Checkpoint
 
-Train it from scratch with 2xH200 on the Bench2Drive Base cache:
+Pretrained artifact: download the Bench2Drive base checkpoint from the
+[root README artifact table](../../README.md#artifacts) and place it at:
+
+```text
+weights/original_ckpts/base_drivor_b2d.ckpt
+```
+
+To train it from scratch with 2xH200 on the Bench2Drive Base cache:
 
 ```bash
 conda activate memorydrivor-b2d
@@ -39,7 +46,14 @@ cp "$NAVSIM_EXP_ROOT/ke/b2d/base_drivor_b2d/<RUN_ID>/lightning_logs/version_0/ch
 
 ## Construct The Bench2Drive Memory Bank
 
-To construct the memory bank, use the Bench2Drive base checkpoint and the Full-set metadata
+Prebuilt artifact: download the Bench2Drive memory bank from the
+[root README artifact table](../../README.md#artifacts) and place it at:
+
+```text
+memory_banks/memory_bank_b2d.pt
+```
+
+To regenerate it, use the Bench2Drive base checkpoint and the Full-set metadata
 shards generated in [setup.md](setup.md). The Full dataset is only needed for
 this memory-bank construction step.
 
@@ -67,6 +81,13 @@ python navsim/planning/script/run_build_b2d_episodic_memory_bank.py \
 The resulting bank is written to `memory_banks/memory_bank_b2d.pt`.
 
 ## Fine-Tune MemoryDrivoR On The Bench2Drive Memory Bank
+
+Pretrained artifact: download the Bench2Drive MemoryDrivoR checkpoint from the
+[root README artifact table](../../README.md#artifacts) and place it at:
+
+```text
+weights/memorydrivor_b2d.ckpt
+```
 
 To fine-tune from the Bench2Drive base checkpoint:
 
@@ -104,6 +125,13 @@ cp "$NAVSIM_EXP_ROOT/ke/b2d/memorydrivor_b2d/<RUN_ID>/lightning_logs/version_0/c
 ```
 
 ## Fine-Tune Bench2Drive DrivoR Only On Ego Status
+
+Pretrained artifact: download the Bench2Drive ego-only checkpoint from the
+[root README artifact table](../../README.md#artifacts) and place it at:
+
+```text
+weights/ego_only_b2d.ckpt
+```
 
 To fine-tune the no-camera/no-memory control:
 

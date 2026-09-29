@@ -105,8 +105,8 @@ bash ImportAssets.sh
 
 ## Download Data
 
-Review the Bench2Drive and CARLA licenses before downloading. Closed-loop
-evaluation does not require the training data. Download the Full sets only if you want to
+Review the Bench2Drive and CARLA licenses before downloading. Skip this section
+for released closed-loop evaluation. Download the Full sets only if you want to
 regenerate the memory bank.
 
 ```bash
@@ -195,7 +195,7 @@ python navsim/planning/script/run_b2d_gen_mapinfo.py \
 ```
 
 
-## Download External Checkpoint
+## Download External Checkpoints
 
 DINOv2 image backbone:
 
@@ -204,13 +204,26 @@ git lfs install
 git clone https://huggingface.co/timm/vit_small_patch14_reg4_dinov2.lvd142m "$MEMORYDRIVOR_ROOT/weights/vit_small_patch14_reg4_dinov2.lvd142m"
 ```
 
-## Project Artifacts
+Bench2Drive checkpoint and memory-bank artifacts:
 
-MemoryDrivoR-produced Bench2Drive checkpoints and the memory bank will be released soon. Until then, follow [reproduction.md](reproduction.md) to train the checkpoints
-and construct the memory bank locally.
+```bash
+export MEMORYDRIVOR_CLOUD="https://zenodo.org/records/22959058/files"
+
+curl -L "$MEMORYDRIVOR_CLOUD/base_drivor_b2d.ckpt" \
+  -o "$MEMORYDRIVOR_ROOT/weights/original_ckpts/base_drivor_b2d.ckpt"
+
+curl -L "$MEMORYDRIVOR_CLOUD/memorydrivor_b2d.ckpt" \
+  -o "$MEMORYDRIVOR_ROOT/weights/memorydrivor_b2d.ckpt"
+
+curl -L "$MEMORYDRIVOR_CLOUD/ego_only_b2d.ckpt" \
+  -o "$MEMORYDRIVOR_ROOT/weights/ego_only_b2d.ckpt"
+
+curl -L "$MEMORYDRIVOR_CLOUD/memory_bank_b2d.pt" \
+  -o "$MEMORYDRIVOR_ROOT/memory_banks/memory_bank_b2d.pt"
+```
 
 
-## Memory bank regeneration
+## (Optional) Memory bank regeneration
 
 For memory-bank regeneration, download the Full and Full-Sup data of Bench2Drive (total size:  4 TB):
 ```bash
